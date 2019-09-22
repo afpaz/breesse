@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Breesse Command Evaluator
+Bundle-SymbolicName: ca.ets.sofeess.breesse.engine
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: École de Technologie Supérieure
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: ca.ets.sofeess.breesse.engine,
+ ca.ets.sofeess.breesse.engine.commands,
+ ca.ets.sofeess.breesse.engine.types
+Require-Bundle: matlabengine.bundle;bundle-version="1.0.0"

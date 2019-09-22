@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Breesse Simulink and Stateflow Importer UI
+Bundle-SymbolicName: ca.ets.sofeess.breesse.importer.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ca.ets.sofeess.breesse.importer.ui.BreesseImporterUIPlugin
+Bundle-Vendor: École de Technologie Supérieure
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ ca.ets.sofeess.breesse.importer.api;bundle-version="1.0.0",
+ org.eclipse.core.expressions,
+ org.eclipse.emf.ecore
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2016-2019 ÉTS
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      https://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="simulink" nsURI="http://www.etsmtl.ca/sofeess/breesse/simulink/1.0" nsPrefix="simulink">
+  <eClassifiers xsi:type="ecore:EClass" name="SimulinkModel" eSuperTypes="#//SubSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLibrary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimulinkElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="handle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Block" eSuperTypes="#//SimulinkElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedPorts" upperBound="-1"
+        eType="#//Port" containment="true" eOpposite="#//Port/block"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//SubSystem"
+        eOpposite="#//SubSystem/subBlocks"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Port" abstract="true" eSuperTypes="#//SimulinkElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="block" eType="#//Block"
+        eOpposite="#//Block/ownedPorts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="portBlock" eType="#//PortBlock"
+        eOpposite="#//PortBlock/port"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="portNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InPort" eSuperTypes="#//Port">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connection" eType="#//Connection"
+        eOpposite="#//Connection/to"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OutPort" eSuperTypes="#//Port">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connection" eType="#//Connection"
+        eOpposite="#//Connection/from"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SubSystem" eSuperTypes="#//Block">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subBlocks" upperBound="-1"
+        eType="#//Block" containment="true" eOpposite="#//Block/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connections" upperBound="-1"
+        eType="#//Connection" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PortBlock" abstract="true" eSuperTypes="#//Block">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="port" eType="#//Port" eOpposite="#//Port/portBlock"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="portNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InPortBlock" eSuperTypes="#//PortBlock"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutPortBlock" eSuperTypes="#//PortBlock"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Connection" eSuperTypes="#//SimulinkElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//OutPort"
+        eOpposite="#//OutPort/connection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//InPort" eOpposite="#//InPort/connection"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Chart" eSuperTypes="#//CompositeStateflowElement #//Block">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="decomposition" lowerBound="1"
+        eType="#//DecompositionType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Vertex" abstract="true" eSuperTypes="#//ContainableStateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="incomingTransitions" lowerBound="1"
+        upperBound="-1" eType="#//Transition" eOpposite="#//Transition/destination"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingTransitions" upperBound="-1"
+        eType="#//Transition" eOpposite="#//Transition/source"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="#//Vertex #//CompositeStateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="decomposition" lowerBound="1"
+        eType="#//DecompositionType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionOrder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryActions" upperBound="-1"
+        eType="#//Action" containment="true" eOpposite="#//Action/stateEntry"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="duringActions" upperBound="-1"
+        eType="#//Action" containment="true" eOpposite="#//Action/stateDuring"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exitActions" upperBound="-1"
+        eType="#//Action" containment="true" eOpposite="#//Action/stateExit"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Junction" eSuperTypes="#//Vertex"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="DecompositionType">
+    <eLiterals name="EXCLUSIVE_OR" literal="EXCLUSIVE_OR"/>
+    <eLiterals name="PARALLEL_AND" value="1" literal="PARALLEL_AND"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//ContainableStateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Vertex"
+        eOpposite="#//Vertex/outgoingTransitions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="destination" lowerBound="1"
+        eType="#//Vertex" eOpposite="#//Vertex/incomingTransitions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" eType="#//SFWGuard"
+        containment="true" eOpposite="#//SFWGuard/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="triggeredActions" upperBound="-1"
+        eType="#//Action" containment="true" eOpposite="#//Action/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefaultTransition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionOrder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trigger" eType="#//SFWTrigger"
+        containment="true" eOpposite="#//SFWTrigger/transition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SFWGuard">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="statement" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" eType="#//Transition"
+        eOpposite="#//Transition/guard"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Action">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="statement" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" eType="#//Transition"
+        eOpposite="#//Transition/triggeredActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateEntry" eType="#//State"
+        eOpposite="#//State/entryActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateDuring" eType="#//State"
+        eOpposite="#//State/duringActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateExit" eType="#//State"
+        eOpposite="#//State/exitActions"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateflowElement" abstract="true" eSuperTypes="#//SimulinkElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//CompositeStateflowElement #//ContainableStateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="signature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CompositeStateflowElement" abstract="true"
+      eSuperTypes="#//StateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//ContainableStateflowElement" containment="true" eOpposite="#//ContainableStateflowElement/parent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainableStateflowElement" abstract="true"
+      eSuperTypes="#//StateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//CompositeStateflowElement"
+        eOpposite="#//CompositeStateflowElement/children"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TruthTable" abstract="true" eSuperTypes="#//StateflowElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditionTable" lowerBound="1"
+        eType="#//ConditionTable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionTable" lowerBound="1"
+        eType="#//ActionTable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="data" upperBound="-1" eType="#//Data"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="decisions" lowerBound="1"
+        upperBound="-1" eType="#//Decision" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" lowerBound="1"
+        upperBound="-1" eType="#//Condition" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ActionTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionEntries" lowerBound="1"
+        upperBound="-1" eType="#//ActionEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Condition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="statement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Decision">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="decisionEntries" lowerBound="1"
+        upperBound="-1" eType="#//DecisionEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionReference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DecisionEntry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="1"
+        eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionOutcome" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainableTruthTable" eSuperTypes="#//TruthTable #//ContainableStateflowElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TruthTableChart" eSuperTypes="#//TruthTable #//Block"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActionEntry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionReference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionStatement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Data" abstract="true" eSuperTypes="#//ContainableStateflowElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InputData" eSuperTypes="#//Data #//InPort"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutputData" eSuperTypes="#//Data #//OutPort"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LocalData" eSuperTypes="#//Data">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockReference" eSuperTypes="#//Reference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SFWTrigger">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="statement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" eType="#//Transition"
+        eOpposite="#//Transition/trigger"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelReference" eSuperTypes="#//Reference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" abstract="true" eSuperTypes="#//SubSystem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceBlock" eType="#//Block"/>
+  </eClassifiers>
+</ecore:EPackage>
