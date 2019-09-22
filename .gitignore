@@ -1,3 +1,7 @@
+# Local Files #
+.DS_Store
+/bin
+
 # Compiled class file
 *.class
 
